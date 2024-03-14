@@ -3,21 +3,34 @@
   "version": "1.0.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "start": "expo start",
+    "start": "expo start --clear",
+    "start:tunnel": "expo start --tunnel",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web"
   },
   "dependencies": {
-    "expo": "~50.0.8",
+    "@expo/metro-runtime": "~3.1.3",
+    "@react-native-masked-view/masked-view": "0.3.1",
+    "@react-navigation/bottom-tabs": "^6.5.19",
+    "@react-navigation/native": "^6.1.14",
+    "@react-navigation/native-stack": "^6.9.22",
+    "@react-navigation/stack": "^6.3.25",
+    "expo": "~50.0.11",
     "expo-status-bar": "~1.11.1",
+    "phosphor-react-native": "^2.0.0",
     "react": "18.2.0",
-    "react-native": "0.73.4"
+    "react-hook-form": "^7.51.0",
+    "react-native": "0.73.5",
+    "react-native-gesture-handler": "~2.15.0",
+    "react-native-web": "~0.19.10",
+    "styled-components": "^6.1.8"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0",
-    "@types/react": "~18.2.45",
-    "typescript": "^5.1.3"
+    "@babel/core": "^7.24.0",
+    "@types/react": "~18.2.64",
+    "@types/styled-components": "^5.1.34",
+    "typescript": "^5.4.2"
   },
   "private": true
 }
