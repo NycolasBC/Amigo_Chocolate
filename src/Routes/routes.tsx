@@ -4,6 +4,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Home } from "../Screens/Home";
 import { Login } from "../Screens/Login";
 import { RecoverPassword } from "../Screens/RecoverPassword";
+import { SignUp } from '../Screens/SignUp'
 import { Footer } from "../Components/Footer";
 
 const routes = createNativeStackNavigator();
@@ -13,6 +14,7 @@ type RoutesNavigationType = {
     Home: undefined;
     Login: undefined;
     RecoverPassword: undefined;
+    SignUp: undefined;
 }
 
 export type routesType = NativeStackNavigationProp<RoutesNavigationType>
@@ -24,6 +26,7 @@ export function TabNavigator() {
             <tab.Screen name="Login" component={Login} />
             <tab.Screen name="Home" component={Home} />
             <tab.Screen name="RecoverPassword" component={RecoverPassword} />
+            <tab.Screen name="SignUp" component={SignUp} />
         </tab.Navigator>
     )
 }

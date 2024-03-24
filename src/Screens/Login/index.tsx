@@ -1,4 +1,4 @@
-import { Text } from "react-native";
+import { Text, View } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { useNavigation } from "@react-navigation/native";
 import { routesType } from "../../Routes/routes";
@@ -23,7 +23,7 @@ type UserLoginType = {
 export function Login() {
     const navigation = useNavigation<routesType>();
 
-    const { control, handleSubmit } = useForm<UserLoginType>({
+    const { control, handleSubmit, formState: { errors } } = useForm<UserLoginType>({
         defaultValues: {
             email: '',
             password: ''
@@ -44,30 +44,37 @@ export function Login() {
             <Controller
                 control={control}
                 name="email"
-                rules={{ required: true }}
-                render={({ field }) => (
-                    <TextInputStyle
-                        placeholder="Digite seu e-mail"
-                        value={field.value}
-                        onChangeText={field.onChange}
-                        onBlur={field.onBlur}
-                    />
+                rules={{ required: "É necessário preencher o email" }}
+                render={({ field, fieldState: { error } }) => (
+                    <View>
+                        <TextInputStyle
+                            placeholder="Digite seu e-mail"
+                            value={field.value}
+                            onChangeText={field.onChange}
+                            onBlur={field.onBlur}
+                        />
+                        {error && <Text style={{color: 'red'}}>{error.message}</Text>}
+                    </View>
                 )}
             />
 
             <Controller
                 control={control}
                 name="password"
-                rules={{ required: true }}
-                render={({ field }) => (
-                    <TextInputStyle
-                        placeholder="Digite sua senha"
-                        value={field.value}
-                        onChangeText={field.onChange}
-                        onBlur={field.onBlur}
-                    />
+                rules={{ required: "É necessário preencher a senha" }}
+                render={({ field, fieldState: { error } }) => (
+                    <View>
+                        <TextInputStyle
+                            placeholder="Digite sua senha"
+                            value={field.value}
+                            onChangeText={field.onChange}
+                            onBlur={field.onBlur}
+                        />
+                        {error && <Text style={{color: 'red'}}>{error.message}</Text>}
+                    </View>
                 )}
             />
+            
 
             <StyledText onPress={() => navigation.navigate("RecoverPassword")}>
                 Esqueceu a senha?
@@ -83,6 +90,10 @@ export function Login() {
                     <FontAwesome6 name="google" size={26} color="black" />
                 </StyledViewLogo>
             </StyledTouchableOpacityLogo>
+
+            <StyledText onPress={() => navigation.navigate("SignUp")}>
+                Não possui acesso? Se cadastre aqui
+            </StyledText>
         </StyledView>
     )
 }

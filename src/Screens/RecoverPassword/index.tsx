@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import { Text } from "react-native";
+import { Text, View } from "react-native";
 import { routesType } from "../../Routes/routes";
 import { Controller, useForm } from "react-hook-form";
 import { StyledText, StyledTouchableOpacity, StyledView, TextInputStyle } from "./styles";
@@ -11,7 +11,7 @@ type RecoverPasswordType = {
 export function RecoverPassword() {
     const navigation = useNavigation<routesType>();
 
-    const { control, handleSubmit, register } = useForm<RecoverPasswordType>({
+    const { control, handleSubmit, formState: { errors } } = useForm<RecoverPasswordType>({
         defaultValues: {
             email: ''
         }
@@ -27,14 +27,17 @@ export function RecoverPassword() {
             <Controller
                 control={control}
                 name="email"
-                rules={{ required: true }}
-                render={({ field }) => (
-                    <TextInputStyle
-                        placeholder="Digite seu e-mail"
-                        value={field.value}
-                        onChangeText={field.onChange}
-                        onBlur={field.onBlur}
-                    />
+                rules={{ required: "É necessário preencher o email" }}
+                render={({ field, fieldState: { error } }) => (
+                    <View>
+                        <TextInputStyle
+                            placeholder="Digite seu e-mail"
+                            value={field.value}
+                            onChangeText={field.onChange}
+                            onBlur={field.onBlur}
+                        />
+                        {error && <Text style={{color: 'red'}}>{error.message}</Text>}
+                    </View>
                 )}
             />
 
