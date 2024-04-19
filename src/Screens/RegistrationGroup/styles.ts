@@ -48,6 +48,6 @@ export const StyledViewImage = styled.View`
 
 export const StyledImage = styled.Image`
     border-radius: 50px;
-    width: 100px;
-    height: 100px;
+    width: 100;
+    height: 100;
 `

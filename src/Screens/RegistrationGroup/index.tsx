@@ -1,4 +1,5 @@
-import { View, Text, Button, Image } from "react-native";
+import React from 'react';
+import { View, Text, Button } from "react-native";
 import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { useNavigation } from "@react-navigation/native";
@@ -13,46 +14,30 @@ import {
     TextInputStyle
 } from "./styles";
 
-
-type UserSignUpType = {
-    image: string;
+type GroupRegistrationType = {
+    image?: string;
     name: string;
-    email: string;
-    password: string;
-    confirmPassword: string;
+    qtdUsers: string;
+    amount: string;
+    dtReveal: string;
+    description?: string;
 }
 
-
-export function SignUp() {
+export function RegistrationGroup() {
     const [newImage, setNewImage] = useState('');
 
     const navigation = useNavigation<routesType>();
 
-    const { control, handleSubmit } = useForm<UserSignUpType>({
+    const { control, handleSubmit, setValue } = useForm<GroupRegistrationType>({
         defaultValues: {
             image: '',
             name: '',
-            email: '',
-            password: '',
-            confirmPassword: ''
+            qtdUsers: '',
+            amount: '',
+            dtReveal: '',
+            description: ''
         }
     });
-
-    function HandleOnClick(data: UserSignUpType) {
-        console.log("Data :", data);
-
-        data.image = newImage;
-
-        console.log("Data :", data);
-
-        if (data.password.toString != data.confirmPassword.toString) {
-            alert("A senha de confrimação está incorreta")
-        }
-        else {
-            navigation.navigate("Login");
-
-        }
-    }
 
     async function pickImage() {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -62,21 +47,27 @@ export function SignUp() {
             quality: 1,
         });
 
-        console.log(result);
+        console.log("IMAGEMMMMMMMMMMMMMMM                              ", result);
 
         if (!result.canceled) {
+            setValue('image', result.assets[0].uri);
             setNewImage(result.assets[0].uri);
         }
     };
 
+    function HandleOnClick(data: GroupRegistrationType) {
+        console.log("Data :", data);
+        navigation.navigate("Home");
+    }
+
     return (
         <StyledView>
-            <StyledTextTitle>Novo Cadastro</StyledTextTitle>
+            <StyledTextTitle>Cadastrar Novo Grupo</StyledTextTitle>
 
             <Controller
                 control={control}
                 name="image"
-                render={({ field }) => (
+                render={() => (
                     <StyledViewImage>
                         {newImage && <StyledImage source={{ uri: newImage }} />}
                         <Button title="Selecione uma imagem da galeria" onPress={pickImage} />
@@ -103,12 +94,12 @@ export function SignUp() {
 
             <Controller
                 control={control}
-                name="email"
-                rules={{ required: "É necessário preencher o email", }}
+                name="qtdUsers"
+                rules={{ required: "É necessário informar uma quantidade", }}
                 render={({ field, fieldState: { error } }) => (
                     <View>
                         <TextInputStyle
-                            placeholder="Digite seu e-mail"
+                            placeholder="Informe a quantidade de pessoas"
                             value={field.value}
                             onChangeText={field.onChange}
                             onBlur={field.onBlur}
@@ -120,12 +111,12 @@ export function SignUp() {
 
             <Controller
                 control={control}
-                name="password"
-                rules={{ required: "É necessário preencher a senha" }}
+                name="amount"
+                rules={{ required: "É necessário informar um valor" }}
                 render={({ field, fieldState: { error } }) => (
                     <View>
                         <TextInputStyle
-                            placeholder="Digite sua senha"
+                            placeholder="Informe o valor minimo de dinheiro"
                             value={field.value}
                             onChangeText={field.onChange}
                             onBlur={field.onBlur}
@@ -137,23 +128,38 @@ export function SignUp() {
 
             <Controller
                 control={control}
-                name="confirmPassword"
-                rules={{ required: "É necessário confirmar a senha" }}
+                name="dtReveal"
+                rules={{ required: "É necessário informar uma data" }}
                 render={({ field, fieldState: { error } }) => (
                     <View>
                         <TextInputStyle
-                            placeholder="Confirme sua senha"
+                            placeholder="Informe a data de revelação"
                             value={field.value}
                             onChangeText={field.onChange}
                             onBlur={field.onBlur}
                         />
                         {error && <Text style={{ color: 'red' }}>{error.message}</Text>}
+                    </View>
+                )}
+            />
+
+            <Controller
+                control={control}
+                name="description"
+                render={({ field }) => (
+                    <View>
+                        <TextInputStyle
+                            placeholder="Informe uma descrição"
+                            value={field.value}
+                            onChangeText={field.onChange}
+                            onBlur={field.onBlur}
+                        />
                     </View>
                 )}
             />
 
             <StyledTouchableOpacity onPress={handleSubmit(HandleOnClick)}>
-                <Text>Cadastrar</Text>
+                <Text>Cadastrar Grupo</Text>
             </StyledTouchableOpacity>
         </StyledView>
     )

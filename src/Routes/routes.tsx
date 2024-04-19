@@ -5,6 +5,7 @@ import { Home } from "../Screens/Home";
 import { Login } from "../Screens/Login";
 import { RecoverPassword } from "../Screens/RecoverPassword";
 import { SignUp } from '../Screens/SignUp'
+import { RegistrationGroup } from "../Screens/RegistrationGroup";
 import { Footer } from "../Components/Footer";
 
 const routes = createNativeStackNavigator();
@@ -15,6 +16,7 @@ type RoutesNavigationType = {
     Login: undefined;
     RecoverPassword: undefined;
     SignUp: undefined;
+    RegistrationGroup: undefined;
 }
 
 export type routesType = NativeStackNavigationProp<RoutesNavigationType>
@@ -27,6 +29,7 @@ export function TabNavigator() {
             <tab.Screen name="Home" component={Home} />
             <tab.Screen name="RecoverPassword" component={RecoverPassword} />
             <tab.Screen name="SignUp" component={SignUp} />
+            <tab.Screen name="RegistrationGroup" component={RegistrationGroup} />
         </tab.Navigator>
     )
 }

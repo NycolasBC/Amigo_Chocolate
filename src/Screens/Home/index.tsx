@@ -1,23 +1,22 @@
 import { useNavigation } from "@react-navigation/native";
-import { Text, TouchableOpacity, View } from "react-native";
 import { routesType } from "../../Routes/routes";
+import { StyledText, StyledTouchableOpacity, StyledView } from "./styles";
+import { GroupCard } from "../../Components/GroupCard";
 
 export function Home() {
     const navigation = useNavigation<routesType>();
 
-    function Handle() {
-        navigation.navigate("Login");
-    }
-
-
     return (
-        <View>
-            <Text>Home</Text>
-            <TouchableOpacity
-                onPress={Handle}
+        <StyledView>
+            <StyledTouchableOpacity
+                onPress={() => { navigation.navigate("RegistrationGroup") }}
             >
-                <Text>Sair</Text>
-            </TouchableOpacity>
-        </View>
+                <StyledText>Cadastrar Grupo</StyledText>
+            </StyledTouchableOpacity>
+
+            <GroupCard image="" name="Grupo 1" />
+            <GroupCard image="" name="Grupo 2" />
+            <GroupCard image="" name="Grupo 3" />
+        </StyledView>
     )
 }
