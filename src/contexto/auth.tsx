@@ -1,5 +1,8 @@
+// auth.tsx
+
 import { createContext, useState, useEffect, useContext } from 'react';
 import axios from 'axios';
+import { useNavigation } from '@react-navigation/native';
 
 interface AuthContextType {
     authenticated: boolean;
@@ -9,25 +12,25 @@ interface AuthContextType {
     logout: () => void;
 }
 
-
 export const AuthContext = createContext<AuthContextType>({
     authenticated: false,
     user: null,
     loading: true,
-    login: async () => {},
-    logout: () => {}
+    login: async () => { },
+    logout: () => { }
 });
 
-export const AuthProvider = ({ children, navigation }) => {
+export const AuthProvider = ({ children }: any) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const navigation = useNavigation();
 
     useEffect(() => {
-        // const recoveredUser = localStorage.getItem("amigochocolate:user");
+        const recoveredUser = localStorage.getItem("amigochocolate:user");
 
-        // if (recoveredUser) {
-        //     setUser(JSON.parse(recoveredUser));
-        // }
+        if (recoveredUser) {
+            setUser(JSON.parse(recoveredUser));
+        }
 
         setLoading(false);
     }, []);
@@ -37,13 +40,16 @@ export const AuthProvider = ({ children, navigation }) => {
             const resposta = await axios.post(
                 'https://localhost:7278/api/Login/autenticar', {
                 Email: email,
-                Senha: password 
+                Senha: password
             });
 
             if (resposta.status === 200) {
                 setUser(resposta.data);
-                // localStorage.setItem("amigochocolate:user", JSON.stringify(resposta.data));
-                navigation.navigate("Home");
+
+                console.log("User", resposta.data)
+
+                localStorage.setItem("amigochocolate:user", JSON.stringify(resposta.data));
+                navigation.navigate('Home');
             }
         } catch (err) {
             console.log("Erro ao enviar os dados: ", err);
@@ -51,7 +57,6 @@ export const AuthProvider = ({ children, navigation }) => {
     };
 
     const logout = () => {
-        // localStorage.removeItem("amigochocolate:user");
         setUser(null);
         navigation.navigate("Login");
     };

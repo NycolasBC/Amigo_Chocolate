@@ -1,5 +1,4 @@
 import React from 'react';
-import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp, createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Home } from "../Screens/Home";
@@ -13,7 +12,7 @@ import { RegistrationGroup } from '../Screens/RegistrationGroup';
 const routes = createNativeStackNavigator();
 const tab = createBottomTabNavigator();
 
-type RoutesNavigationType = {
+export type RoutesNavigationType = {
     Home: undefined;
     Login: undefined;
     RecoverPassword: undefined;
@@ -23,40 +22,42 @@ type RoutesNavigationType = {
 
 export type routesType = NativeStackNavigationProp<RoutesNavigationType>
 
-function TabNavigator() {
-    return (
-        <tab.Navigator screenOptions={{ headerShown: false }} tabBar={Footer}>
-            <tab.Screen name="Home" component={Home} />   
-            <tab.Screen name="RegistrationGroup" component={RegistrationGroup} />         
-        </tab.Navigator>
-    )
-}
+// function TabNavigator() {
+//     return (
+//         <tab.Navigator initialRouteName='Home' screenOptions={{ headerShown: false }} tabBar={Footer}>
+//             <tab.Screen name="Home" component={Home} />
+//             <tab.Screen name="RegistrationGroup" component={RegistrationGroup} />
+//         </tab.Navigator>
+//     )
+// }
 
-function AuthenticatedRoutes() {
-    return (
-        <routes.Navigator screenOptions={{ headerShown: false }}>
-            <routes.Screen name="Tabs" component={TabNavigator} />
-        </routes.Navigator>
-    )
-}
+// function AuthenticatedRoutes() {
+//     return (
+//         <routes.Navigator screenOptions={{ headerShown: false }}>
+//             {/* <routes.Screen name="Tabs" component={TabNavigator} /> */}
+//         </routes.Navigator>
+//     )
+// }
 
 function GuestRoutes() {
     return (
-        <routes.Navigator screenOptions={{ headerShown: false }}>
+        <routes.Navigator initialRouteName='Login' screenOptions={{ headerShown: false }}>
             <routes.Screen name="Login" component={Login} />
-            <tab.Screen name="RecoverPassword" component={RecoverPassword} />
-            <tab.Screen name="SignUp" component={SignUp} />
+            <routes.Screen name="RecoverPassword" component={RecoverPassword} />
+            <routes.Screen name="SignUp" component={SignUp} />
+            <routes.Screen name="Home" component={Home} />
+            <routes.Screen name="RegistrationGroup" component={RegistrationGroup} />
         </routes.Navigator>
     )
 }
 
 export function Routes() {
-    const navigation = useNavigation<routesType>();
     const { user } = useAuth();
 
     return (
-        <AuthProvider navigation={navigation}> 
-            {user ? <AuthenticatedRoutes /> : <GuestRoutes />} 
+        <AuthProvider>
+            {/* {user ? <AuthenticatedRoutes /> : <GuestRoutes />} */}
+            <GuestRoutes />
         </AuthProvider>
     )
 }

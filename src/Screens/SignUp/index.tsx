@@ -53,13 +53,13 @@ export function SignUp() {
             try {
                 const resposta = await axios.post(
                     'https://localhost:7278/api/Usuario/adicionar', {
-                        Foto: data.image,
-                        Nome: data.name,
-                        Email: data.email,
-                        Senha: data.password,
-                        Id_Status: 1                        
+                    Foto: data.image,
+                    Nome: data.name,
+                    Email: data.email,
+                    Senha: data.password,
+                    Id_Status: 1
                 });
-    
+
                 if (resposta.status === 200) {
                     navigation.navigate("Login");
                 }

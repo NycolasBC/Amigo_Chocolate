@@ -24,7 +24,7 @@ export function Login() {
     const { login } = useAuth();
     const navigation = useNavigation<routesType>();
 
-    const { control, handleSubmit, formState: { errors } } = useForm<UserLoginType>({
+    const { control, handleSubmit } = useForm<UserLoginType>({
         defaultValues: {
             email: '',
             password: ''
@@ -34,9 +34,9 @@ export function Login() {
     async function HandleOnClick(data: UserLoginType) {
         try {
             await login(data.email, data.password)
-          } catch (erro) {
+        } catch (erro) {
             console.log('Erro ao enviar dados: ', erro);
-          }
+        }
     }
 
     return (
@@ -58,7 +58,7 @@ export function Login() {
                             onChangeText={field.onChange}
                             onBlur={field.onBlur}
                         />
-                        {error && <Text style={{color: 'red'}}>{error.message}</Text>}
+                        {error && <Text style={{ color: 'red' }}>{error.message}</Text>}
                     </View>
                 )}
             />
@@ -75,11 +75,11 @@ export function Login() {
                             onChangeText={field.onChange}
                             onBlur={field.onBlur}
                         />
-                        {error && <Text style={{color: 'red'}}>{error.message}</Text>}
+                        {error && <Text style={{ color: 'red' }}>{error.message}</Text>}
                     </View>
                 )}
             />
-            
+
 
             <StyledText onPress={() => navigation.navigate("RecoverPassword")}>
                 Esqueceu a senha?
