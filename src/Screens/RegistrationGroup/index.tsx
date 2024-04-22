@@ -13,6 +13,7 @@ import {
     StyledViewImage,
     TextInputStyle
 } from "./styles";
+import axios from 'axios';
 
 type GroupRegistrationType = {
     image?: string;
@@ -47,17 +48,33 @@ export function RegistrationGroup() {
             quality: 1,
         });
 
-        console.log("IMAGEMMMMMMMMMMMMMMM                              ", result);
-
         if (!result.canceled) {
             setValue('image', result.assets[0].uri);
             setNewImage(result.assets[0].uri);
         }
     };
 
-    function HandleOnClick(data: GroupRegistrationType) {
-        console.log("Data :", data);
-        navigation.navigate("Home");
+    async function HandleOnClick(data: GroupRegistrationType) {
+        try {
+            console.log("Data :", data);
+
+            const resposta = await axios.post(
+                'https://localhost:7278/api/Grupo/adicionar', {
+                    Foto: data.image,
+                    Nome: data.name,
+                    QtdUsuario: data.qtdUsers,
+                    Valor: data.amount,
+                    DataRevelacao: data.dtReveal,
+                    Descricao: data.description,
+                    Id_Status: 1                        
+            });
+
+            if (resposta.status === 200) {
+                navigation.navigate("Home");
+            }
+        } catch (err) {
+            console.log("Erro ao enviar os dados: ", err);
+        }
     }
 
     return (

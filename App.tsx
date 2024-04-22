@@ -1,14 +1,14 @@
 import { ThemeProvider } from 'styled-components/native';
 import { Routes } from './src/Routes/routes';
 import theme from './src/styles/theme';
-import { NativeBaseProvider } from 'native-base';
+import { NavigationContainer } from '@react-navigation/native';
 
 export default function App() {
   return (
-    <NativeBaseProvider>
       <ThemeProvider theme={theme}>
-        <Routes />
+        <NavigationContainer>
+          <Routes />
+        </NavigationContainer>
       </ThemeProvider>
-    </NativeBaseProvider>
   );
 }

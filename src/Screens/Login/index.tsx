@@ -3,6 +3,7 @@ import { useForm, Controller } from "react-hook-form";
 import { useNavigation } from "@react-navigation/native";
 import { routesType } from "../../Routes/routes";
 import { MaterialCommunityIcons, FontAwesome6 } from '@expo/vector-icons';
+import { useAuth } from "../../contexto/auth";
 import {
     StyledView,
     StyledTouchableOpacity,
@@ -13,7 +14,6 @@ import {
     StyledTextTitle
 } from "./styles";
 
-
 type UserLoginType = {
     email: string;
     password: string;
@@ -21,6 +21,7 @@ type UserLoginType = {
 
 
 export function Login() {
+    const { login } = useAuth();
     const navigation = useNavigation<routesType>();
 
     const { control, handleSubmit, formState: { errors } } = useForm<UserLoginType>({
@@ -30,8 +31,12 @@ export function Login() {
         }
     });
 
-    function HandleOnClick(data: UserLoginType) {
-        navigation.navigate("Home");
+    async function HandleOnClick(data: UserLoginType) {
+        try {
+            await login(data.email, data.password)
+          } catch (erro) {
+            console.log('Erro ao enviar dados: ', erro);
+          }
     }
 
     return (

@@ -12,6 +12,7 @@ import {
     StyledViewImage,
     TextInputStyle
 } from "./styles";
+import axios from "axios";
 
 
 type UserSignUpType = {
@@ -38,7 +39,7 @@ export function SignUp() {
         }
     });
 
-    function HandleOnClick(data: UserSignUpType) {
+    async function HandleOnClick(data: UserSignUpType) {
         console.log("Data :", data);
 
         data.image = newImage;
@@ -49,8 +50,22 @@ export function SignUp() {
             alert("A senha de confrimação está incorreta")
         }
         else {
-            navigation.navigate("Login");
-
+            try {
+                const resposta = await axios.post(
+                    'https://localhost:7278/api/Usuario/adicionar', {
+                        Foto: data.image,
+                        Nome: data.name,
+                        Email: data.email,
+                        Senha: data.password,
+                        Id_Status: 1                        
+                });
+    
+                if (resposta.status === 200) {
+                    navigation.navigate("Login");
+                }
+            } catch (err) {
+                console.log("Erro ao enviar os dados: ", err);
+            }
         }
     }
 
