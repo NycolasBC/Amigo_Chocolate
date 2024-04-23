@@ -1,39 +1,27 @@
-import { Text, View } from "react-native";
 import ImageDefault from "../../assets/favicon.png";
+import { useNavigation } from "@react-navigation/native";
+import { routesType } from "../../Routes/routes";
 import {
     Card,
     CardTitles,
     StyledImage,
-    StyledTouchableOpacity,
-    StyledView,
-    TextStyled,
     TextTitles
 } from "./styles"
-import { useNavigation } from "@react-navigation/native";
-import { routesType } from "../../Routes/routes";
+import { TouchableOpacityProps } from "react-native";
+import { IGrupo } from "../../Types/group";
 
-
-type GroupType = {
-    image?: string;
-    name: string;
+interface GrupCardProps extends TouchableOpacityProps {
+    data: IGrupo
 }
 
-export function GroupCard(data: GroupType) {
+export function GroupCard({ data, ...props }: GrupCardProps) {
     const navigation = useNavigation<routesType>();
-
     return (
-        <StyledView>
-            <Card>
-                <StyledImage source={{ uri: data.image == null || undefined || "" ? ImageDefault : data.image }} />
-                <CardTitles>
-                    <TextTitles>{data.name}</TextTitles>
-                </CardTitles>
-                <StyledTouchableOpacity
-                    onPress={() => { navigation.navigate("RegistrationGroup") }}
-                >
-                    <TextStyled>Ver</TextStyled>
-                </StyledTouchableOpacity>
-            </Card>
-        </StyledView>
+        <Card {...props} onPress={() => { navigation.navigate("EditGroup", { params: data }) }}>
+            <StyledImage source={{ uri: data.imagem == null || undefined || "" ? ImageDefault : data.imagem }} />
+            <CardTitles>
+                {data.nome}
+            </CardTitles>
+        </Card>
     )
 }

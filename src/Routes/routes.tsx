@@ -4,21 +4,17 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Home } from "../Screens/Home";
 import { Login } from "../Screens/Login";
 import { RecoverPassword } from "../Screens/RecoverPassword";
-import { SignUp } from '../Screens/SignUp'
-import { Footer } from "../Components/Footer";
-import { useAuth, AuthProvider } from '../contexto/auth'; // Importar o contexto de autenticação
+import { SignUp } from '../Screens/SignUp';
 import { RegistrationGroup } from '../Screens/RegistrationGroup';
+import { EditGroup } from '../Screens/EditGroup/EditGroup';
+import { Footer } from "../Components/Footer";
+import { useAuth, AuthProvider } from '../contexto/auth';
+import { RoutesNavigationType } from '../Types/routes';
+
 
 const routes = createNativeStackNavigator();
 const tab = createBottomTabNavigator();
 
-export type RoutesNavigationType = {
-    Home: undefined;
-    Login: undefined;
-    RecoverPassword: undefined;
-    SignUp: undefined;
-    RegistrationGroup: undefined;
-}
 
 export type routesType = NativeStackNavigationProp<RoutesNavigationType>
 
@@ -47,6 +43,7 @@ function GuestRoutes() {
             <routes.Screen name="SignUp" component={SignUp} />
             <routes.Screen name="Home" component={Home} />
             <routes.Screen name="RegistrationGroup" component={RegistrationGroup} />
+            <routes.Screen name="EditGroup" component={EditGroup} />
         </routes.Navigator>
     )
 }

@@ -1,8 +1,8 @@
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { useNavigation } from "@react-navigation/native";
 import { routesType } from "../../Routes/routes";
-import { MaterialCommunityIcons, FontAwesome6 } from '@expo/vector-icons';
+import { MaterialCommunityIcons, FontAwesome6, Feather } from '@expo/vector-icons';
 import { useAuth } from "../../contexto/auth";
 import {
     StyledView,
@@ -11,17 +11,17 @@ import {
     StyledText,
     StyledTouchableOpacityLogo,
     StyledViewLogo,
-    StyledTextTitle
+    StyledTextTitle,
+    StyledViewInput
 } from "./styles";
-
-type UserLoginType = {
-    email: string;
-    password: string;
-}
+import { UserLoginType } from "../../Types/user";
+import { useState } from "react";
 
 
 export function Login() {
     const { login } = useAuth();
+    const [showPassword, setShowPassword] = useState(false);
+
     const navigation = useNavigation<routesType>();
 
     const { control, handleSubmit } = useForm<UserLoginType>({
@@ -69,12 +69,18 @@ export function Login() {
                 rules={{ required: "É necessário preencher a senha" }}
                 render={({ field, fieldState: { error } }) => (
                     <View>
+                        {/* <StyledViewInput> */}
                         <TextInputStyle
                             placeholder="Digite sua senha"
                             value={field.value}
                             onChangeText={field.onChange}
                             onBlur={field.onBlur}
+                            secureTextEntry={!showPassword}
                         />
+                        {/* <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                                {showPassword ? <Feather name="eye-off" size={24} color="white" /> : <Feather name="eye" size={24} color="white" />} senha
+                            </TouchableOpacity> */}
+                        {/* </StyledViewInput> */}
                         {error && <Text style={{ color: 'red' }}>{error.message}</Text>}
                     </View>
                 )}

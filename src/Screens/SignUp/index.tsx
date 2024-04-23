@@ -13,15 +13,7 @@ import {
     TextInputStyle
 } from "./styles";
 import axios from "axios";
-
-
-type UserSignUpType = {
-    image: string;
-    name: string;
-    email: string;
-    password: string;
-    confirmPassword: string;
-}
+import { UserSignUpType } from "../../Types/user";
 
 
 export function SignUp() {
@@ -144,6 +136,7 @@ export function SignUp() {
                             value={field.value}
                             onChangeText={field.onChange}
                             onBlur={field.onBlur}
+                            secureTextEntry
                         />
                         {error && <Text style={{ color: 'red' }}>{error.message}</Text>}
                     </View>
@@ -161,6 +154,7 @@ export function SignUp() {
                             value={field.value}
                             onChangeText={field.onChange}
                             onBlur={field.onBlur}
+                            secureTextEntry
                         />
                         {error && <Text style={{ color: 'red' }}>{error.message}</Text>}
                     </View>

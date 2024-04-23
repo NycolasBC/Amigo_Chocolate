@@ -17,6 +17,14 @@ export const StyledViewButton = styled.View`
     gap: 10px;
 `
 
+export const StyledViewInput = styled.View`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+`
+
 export const TextInputStyle = styled.TextInput`
     height: 40px;
     width: 300px;
@@ -24,6 +32,7 @@ export const TextInputStyle = styled.TextInput`
     justify-content: center;
     background-color: ${({ theme }) => theme.colors.BACKGROUND_SECUNDARY};
     color: ${({ theme }) => theme.colors.TEXT_SECUNDARY};
+    border-radius: 6px;
 `
 
 export const StyledTouchableOpacity = styled.TouchableOpacity`

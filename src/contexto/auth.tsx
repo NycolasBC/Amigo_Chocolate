@@ -3,10 +3,12 @@
 import { createContext, useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
+import { IUser } from '../Types/user';
+
 
 interface AuthContextType {
     authenticated: boolean;
-    user: any;
+    user: IUser;
     loading: boolean;
     login: (email: string, password: string) => Promise<void>;
     logout: () => void;
@@ -14,14 +16,28 @@ interface AuthContextType {
 
 export const AuthContext = createContext<AuthContextType>({
     authenticated: false,
-    user: null,
+    user: {
+        IdUsuario: 0,
+        Foto: "",
+        Nome: "",
+        Email: "",
+        Senha: "",
+        Id_Status: 0
+    },
     loading: true,
     login: async () => { },
     logout: () => { }
 });
 
 export const AuthProvider = ({ children }: any) => {
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState<IUser>({
+        IdUsuario: 0,
+        Foto: "",
+        Nome: "",
+        Email: "",
+        Senha: "",
+        Id_Status: 0
+    });
     const [loading, setLoading] = useState(true);
     const navigation = useNavigation();
 
@@ -46,10 +62,8 @@ export const AuthProvider = ({ children }: any) => {
             if (resposta.status === 200) {
                 setUser(resposta.data);
 
-                console.log("User", resposta.data)
-
                 localStorage.setItem("amigochocolate:user", JSON.stringify(resposta.data));
-                navigation.navigate('Home');
+                navigation.navigate('Home', resposta.data);
             }
         } catch (err) {
             console.log("Erro ao enviar os dados: ", err);
@@ -57,7 +71,14 @@ export const AuthProvider = ({ children }: any) => {
     };
 
     const logout = () => {
-        setUser(null);
+        setUser({
+            IdUsuario: 0,
+            Foto: "",
+            Nome: "",
+            Email: "",
+            Senha: "",
+            Id_Status: 0
+        });
         navigation.navigate("Login");
     };
 

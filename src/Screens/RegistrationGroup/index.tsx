@@ -14,15 +14,8 @@ import {
     TextInputStyle
 } from "./styles";
 import axios from 'axios';
+import { GroupRegistrationType } from '../../Types/group';
 
-type GroupRegistrationType = {
-    image?: string;
-    name: string;
-    qtdUsers: string;
-    amount: string;
-    dtReveal: string;
-    description?: string;
-}
 
 export function RegistrationGroup() {
     const [newImage, setNewImage] = useState('');
