@@ -1,9 +1,10 @@
-import { View, Text, Button, Image } from "react-native";
+import { View, Text, Button } from "react-native";
 import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { useNavigation } from "@react-navigation/native";
 import { routesType } from "../../Routes/routes";
 import * as ImagePicker from 'expo-image-picker';
+import * as FileSystem from 'expo-file-system';
 import {
     StyledImage,
     StyledTextTitle,
@@ -14,6 +15,7 @@ import {
 } from "./styles";
 import axios from "axios";
 import { UserSignUpType } from "../../Types/user";
+import { toast } from "react-toastify";
 
 
 export function SignUp() {
@@ -32,11 +34,9 @@ export function SignUp() {
     });
 
     async function HandleOnClick(data: UserSignUpType) {
-        console.log("Data :", data);
+        const base64 = await convertToBase64(newImage);
 
-        data.image = newImage;
-
-        console.log("Data :", data);
+        data.image = base64;
 
         if (data.password.toString != data.confirmPassword.toString) {
             alert("A senha de confrimação está incorreta")
@@ -53,10 +53,11 @@ export function SignUp() {
                 });
 
                 if (resposta.status === 200) {
+                    toast.success(`Usuário criado com sucesso`);
                     navigation.navigate("Login");
                 }
             } catch (err) {
-                console.log("Erro ao enviar os dados: ", err);
+                toast.error(`Erro ao enviar os dados: ${err}`);
             }
         }
     }
@@ -74,7 +75,19 @@ export function SignUp() {
         if (!result.canceled) {
             setNewImage(result.assets[0].uri);
         }
-    };
+    }
+
+    async function convertToBase64(uri: any) {
+        const fileUri = FileSystem.cacheDirectory + 'tempImage.jpg';
+        await FileSystem.copyAsync({
+          from: uri,
+          to: fileUri,
+        });
+        const base64 = await FileSystem.readAsStringAsync(fileUri, {
+          encoding: FileSystem.EncodingType.Base64,
+        });
+        return base64;
+    }
 
     return (
         <StyledView>

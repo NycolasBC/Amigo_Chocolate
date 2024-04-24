@@ -5,6 +5,7 @@ import { useForm, Controller } from "react-hook-form";
 import { useNavigation } from "@react-navigation/native";
 import { routesType } from "../../Routes/routes";
 import * as ImagePicker from 'expo-image-picker';
+import * as FileSystem from 'expo-file-system';
 import {
     StyledImage,
     StyledTextTitle,
@@ -15,6 +16,7 @@ import {
 } from "./styles";
 import axios from 'axios';
 import { GroupRegistrationType } from '../../Types/group';
+import { toast } from 'react-toastify';
 
 
 export function RegistrationGroup() {
@@ -33,20 +35,6 @@ export function RegistrationGroup() {
         }
     });
 
-    async function pickImage() {
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-        });
-
-        if (!result.canceled) {
-            setValue('image', result.assets[0].uri);
-            setNewImage(result.assets[0].uri);
-        }
-    };
-
     async function HandleOnClick(data: GroupRegistrationType) {
         try {
             console.log("Data :", data);
@@ -63,11 +51,40 @@ export function RegistrationGroup() {
             });
 
             if (resposta.status === 200) {
+                toast.success(`Grupo criado com sucesso`);
                 navigation.navigate("Home");
             }
         } catch (err) {
-            console.log("Erro ao enviar os dados: ", err);
+            toast.error(`Erro ao enviar os dados: ${err}`);
         }
+    }
+
+    async function pickImage() {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+
+        if (!result.canceled) {
+            const base64 = await convertToBase64(newImage);
+
+            setValue('image', base64);
+            setNewImage(result.assets[0].uri);
+        }
+    }
+
+    async function convertToBase64(uri: any) {
+        const fileUri = FileSystem.cacheDirectory + 'tempImage.jpg';
+        await FileSystem.copyAsync({
+          from: uri,
+          to: fileUri,
+        });
+        const base64 = await FileSystem.readAsStringAsync(fileUri, {
+          encoding: FileSystem.EncodingType.Base64,
+        });
+        return base64;
     }
 
     return (

@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, View } from "react-native";
+import { Text, View } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { useNavigation } from "@react-navigation/native";
 import { routesType } from "../../Routes/routes";
@@ -16,6 +16,7 @@ import {
 } from "./styles";
 import { UserLoginType } from "../../Types/user";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 
 export function Login() {
@@ -34,8 +35,8 @@ export function Login() {
     async function HandleOnClick(data: UserLoginType) {
         try {
             await login(data.email, data.password)
-        } catch (erro) {
-            console.log('Erro ao enviar dados: ', erro);
+        } catch (err) {
+            toast.error(`Erro ao enviar os dados: ${err}`);
         }
     }
 

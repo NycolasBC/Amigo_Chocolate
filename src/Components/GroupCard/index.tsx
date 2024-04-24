@@ -4,8 +4,7 @@ import { routesType } from "../../Routes/routes";
 import {
     Card,
     CardTitles,
-    StyledImage,
-    TextTitles
+    StyledImage
 } from "./styles"
 import { TouchableOpacityProps } from "react-native";
 import { IGrupo } from "../../Types/group";

@@ -10,6 +10,7 @@ import { EditGroup } from '../Screens/EditGroup/EditGroup';
 import { Footer } from "../Components/Footer";
 import { useAuth, AuthProvider } from '../contexto/auth';
 import { RoutesNavigationType } from '../Types/routes';
+import { HomeButton } from '../Components/HomeButton';
 
 
 const routes = createNativeStackNavigator();
@@ -37,13 +38,40 @@ export type routesType = NativeStackNavigationProp<RoutesNavigationType>
 
 function GuestRoutes() {
     return (
-        <routes.Navigator initialRouteName='Login' screenOptions={{ headerShown: false }}>
-            <routes.Screen name="Login" component={Login} />
-            <routes.Screen name="RecoverPassword" component={RecoverPassword} />
-            <routes.Screen name="SignUp" component={SignUp} />
-            <routes.Screen name="Home" component={Home} />
-            <routes.Screen name="RegistrationGroup" component={RegistrationGroup} />
-            <routes.Screen name="EditGroup" component={EditGroup} />
+        <routes.Navigator screenOptions={{ headerShown: true }}>
+            <routes.Screen 
+                name="Login" 
+                component={Login} 
+                options={{ headerShown: false }} 
+            />
+            <routes.Screen 
+                name="RecoverPassword" 
+                component={RecoverPassword} 
+                options={{ headerShown: false }} 
+            />
+            <routes.Screen 
+                name="SignUp" 
+                component={SignUp} 
+                options={{ headerShown: false }} 
+            />
+            <routes.Screen 
+                name="Home" 
+                component={Home} 
+                options={{
+                    headerRight: () => <HomeButton />,
+                    headerTitle: 'Home'
+                }}
+            />
+            <routes.Screen 
+                name="RegistrationGroup" 
+                component={RegistrationGroup} 
+                options={{ headerTitle: 'Registration Group' }} 
+            />
+            <routes.Screen 
+                name="EditGroup" 
+                component={EditGroup} 
+                options={{ headerTitle: 'Edit Group' }} 
+            />
         </routes.Navigator>
     )
 }
