@@ -6,7 +6,7 @@ import { GroupCard } from "../../Components/GroupCard";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { IGrupo } from "../../Types/group";
-import { toast } from "react-toastify";
+import { useAuth } from "../../contexto/auth";
 
 
 export function Home() {
@@ -15,7 +15,7 @@ export function Home() {
     const [page, setPage] = useState(1);
     const [allGroupsLoaded, setAllGroupsLoaded] = useState(false);
 
-    const route = useRoute();
+    const { user } = useAuth();
 
     const navigation = useNavigation<routesType>();
 
@@ -29,23 +29,23 @@ export function Home() {
 
     async function getGruposUsuario() {
         try {
-            const apiUrl = `https://localhost:7278/api/GrupoUsuario/buscarporid/${route.params.idUsuario}`;
+            const apiUrl = `https://localhost:7278/api/GrupoUsuario/buscarporid/${user.idUsuario}`;
             const resposta = await axios.get(apiUrl);
 
             setGrupos(resposta.data)
         } catch (err) {
-            toast.error(`Erro ao enviar os dados: ${err}`);
+            alert(`Erro ao enviar os dados: ${err}`);
         }
     }
 
-    
+
 
     async function loadMoreGroups() {
         if (loading || allGroupsLoaded) return;
 
         try {
             setLoading(true);
-            const nextPageUrl = `https://localhost:7278/api/GrupoUsuario/buscarporid/${route.params.idUsuario}?page=${page + 1}`;
+            const nextPageUrl = `https://localhost:7278/api/GrupoUsuario/buscarporid/${user.idUsuario}?page=${page + 1}`;
             const response = await axios.get(nextPageUrl);
             const newGroups = response.data;
 
@@ -62,19 +62,13 @@ export function Home() {
         }
     }
 
-    function isCloseToBottom({ layoutMeasurement, contentOffset, contentSize } : any){
+    function isCloseToBottom({ layoutMeasurement, contentOffset, contentSize }: any) {
         const paddingToBottom = 3;
         return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom;
     };
 
     return (
         <StyledView>
-            <StyledTouchableOpacity
-                onPress={() => { navigation.navigate("RegistrationGroup") }}
-            >
-                <StyledText>Cadastrar Grupo</StyledText>
-            </StyledTouchableOpacity>
-
             <ScrollView
                 onScroll={({ nativeEvent }) => {
                     if (isCloseToBottom(nativeEvent) && !loading && !allGroupsLoaded) {
@@ -84,7 +78,7 @@ export function Home() {
                 scrollEventThrottle={400}
             >
                 {grupos.map((grupo) => (
-                    <GroupCard key={grupo.IdGrupo} data={grupo} />
+                    <GroupCard key={grupo.idGrupo} data={grupo} />
                 ))}
                 {loading && <ActivityIndicator size="large" />}
             </ScrollView>

@@ -8,18 +8,18 @@ export type GroupRegistrationType = {
 }
 
 export interface IGrupoUsuario {
-    IdGrupo: number;
-    IdUsuario: number;
-    Id_Status: number
+    idGrupo: number;
+    idUsuario: number;
+    id_Status: number
 }
 
 export interface IGrupo {
-    IdGrupo: number;
-    Imagem?: string;
-    Nome: string;
-    QtdUsuario: number;
-    Valor: number;
-    DataRevelacao: string;
-    Descricao?: string;
-    Id_Status: number;
+    idGrupo: number;
+    imagem?: string;
+    nome: string;
+    qtdUsuario: number;
+    valor: number;
+    dataRevelacao: string;
+    descricao?: string;
+    id_Status: number;
 }

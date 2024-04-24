@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Button } from "react-native";
+import { View, Text, Pressable } from "react-native";
 import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { useNavigation } from "@react-navigation/native";
@@ -8,6 +8,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
 import {
     StyledImage,
+    StyledImageBorder,
     StyledTextTitle,
     StyledTouchableOpacity,
     StyledView,
@@ -16,11 +17,18 @@ import {
 } from "./styles";
 import axios from 'axios';
 import { GroupRegistrationType } from '../../Types/group';
-import { toast } from 'react-toastify';
+import { useAuth } from '../../contexto/auth';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { format } from 'date-fns';
 
 
 export function RegistrationGroup() {
     const [newImage, setNewImage] = useState('');
+    const [date, setDate] = useState("");
+    const [showPicker, setShowPicker] = useState(false);
+
+    const { user } = useAuth();
 
     const navigation = useNavigation<routesType>();
 
@@ -36,26 +44,36 @@ export function RegistrationGroup() {
     });
 
     async function HandleOnClick(data: GroupRegistrationType) {
+        console.log("Data: ", data.dtReveal)
+
+        const partesData: string[] = data.dtReveal.split('/');
+
+        const datas: Date = new Date(Number(partesData[2]), Number(partesData[1]) - 1, Number(partesData[0]));
+
+        const dataFormatada: string = datas.toISOString();
+        console.log("Data formatada: ", dataFormatada)
         try {
-            console.log("Data :", data);
 
             const resposta = await axios.post(
-                'https://localhost:7278/api/Grupo/adicionar', {
-                    Foto: data.image,
+                `https://localhost:7278/api/Grupo/adicionar`, {
+                Id: user.idUsuario,
+                NovoGrupo: {
+                    Imagem: data.image,
                     Nome: data.name,
                     QtdUsuario: data.qtdUsers,
                     Valor: data.amount,
-                    DataRevelacao: data.dtReveal,
+                    DataRevelacao: dataFormatada,
                     Descricao: data.description,
-                    Id_Status: 1                        
+                    Id_Status: 1
+                }
             });
 
             if (resposta.status === 200) {
-                toast.success(`Grupo criado com sucesso`);
+                alert(`Grupo criado com sucesso`);
                 navigation.navigate("Home");
             }
         } catch (err) {
-            toast.error(`Erro ao enviar os dados: ${err}`);
+            alert(`Erro ao enviar os dados: ${err}`);
         }
     }
 
@@ -68,9 +86,9 @@ export function RegistrationGroup() {
         });
 
         if (!result.canceled) {
-            const base64 = await convertToBase64(newImage);
+            // const base64 = await convertToBase64(newImage);
 
-            setValue('image', base64);
+            setValue('image', newImage);
             setNewImage(result.assets[0].uri);
         }
     }
@@ -78,29 +96,45 @@ export function RegistrationGroup() {
     async function convertToBase64(uri: any) {
         const fileUri = FileSystem.cacheDirectory + 'tempImage.jpg';
         await FileSystem.copyAsync({
-          from: uri,
-          to: fileUri,
+            from: uri,
+            to: fileUri,
         });
         const base64 = await FileSystem.readAsStringAsync(fileUri, {
-          encoding: FileSystem.EncodingType.Base64,
+            encoding: FileSystem.EncodingType.Base64,
         });
         return base64;
     }
+
+    function toggleDatePicker() {
+        setShowPicker(!showPicker)
+    }
+
+    // function onChangeDatePicker({ type }, selectDate){
+    //     if(type == "set"){
+    //         const currentDate = selectDate;
+    //         setDate(currentDate);
+    //     } else{
+    //         toggleDatePicker();
+    //     }
+    // }
 
     return (
         <StyledView>
             <StyledTextTitle>Cadastrar Novo Grupo</StyledTextTitle>
 
-            <Controller
-                control={control}
-                name="image"
-                render={() => (
-                    <StyledViewImage>
-                        {newImage && <StyledImage source={{ uri: newImage }} />}
-                        <Button title="Selecione uma imagem da galeria" onPress={pickImage} />
-                    </StyledViewImage>
-                )}
-            />
+            <StyledImageBorder>
+                <Controller
+                    control={control}
+                    name="image"
+                    render={({ field }) => (
+                        <StyledViewImage>
+                            {/* {newImage && <StyledImage source={{ uri: newImage }} />}
+                            <Button title="Selecione uma imagem da galeria" onPress={pickImage} /> */}
+                            {newImage ? <StyledImage source={{ uri: newImage }} /> : <MaterialCommunityIcons name="image-plus" size={24} color="black" onPress={pickImage} />}
+                        </StyledViewImage>
+                    )}
+                />
+            </StyledImageBorder>
 
             <Controller
                 control={control}
@@ -109,7 +143,7 @@ export function RegistrationGroup() {
                 render={({ field, fieldState: { error } }) => (
                     <View>
                         <TextInputStyle
-                            placeholder="Digite seu nome"
+                            placeholder="Digite o nome do grupo"
                             value={field.value}
                             onChangeText={field.onChange}
                             onBlur={field.onBlur}
@@ -159,12 +193,25 @@ export function RegistrationGroup() {
                 rules={{ required: "É necessário informar uma data" }}
                 render={({ field, fieldState: { error } }) => (
                     <View>
+                        {/* {!showPicker && (
+                            <Pressable onPress={toggleDatePicker}> */}
                         <TextInputStyle
                             placeholder="Informe a data de revelação"
                             value={field.value}
                             onChangeText={field.onChange}
                             onBlur={field.onBlur}
+                        // editable={false}
                         />
+                        {/* </Pressable>
+                        )} */}
+                        {/* {showPicker && (
+                            <DateTimePicker
+                                mode='date'
+                                display='spinner'
+                                value={field.value}
+                                onChange={field.onChange}
+                            />
+                        )} */}
                         {error && <Text style={{ color: 'red' }}>{error.message}</Text>}
                     </View>
                 )}

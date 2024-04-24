@@ -12,11 +12,11 @@ export type UserSignUpType = {
 }
 
 export interface IUser {
-    IdUsuario: number;
-    Foto?: string;
-    Nome: string;
-    Email: string;
-    Senha: string;
-    Id_Status: number;
+    idUsuario: number;
+    foto?: string;
+    nome: string;
+    email: string;
+    senha: string;
+    id_Status: number;
 
 }

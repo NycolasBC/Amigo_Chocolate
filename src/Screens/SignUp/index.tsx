@@ -1,4 +1,4 @@
-import { View, Text, Button } from "react-native";
+import { View, Text } from "react-native";
 import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { useNavigation } from "@react-navigation/native";
@@ -7,6 +7,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
 import {
     StyledImage,
+    StyledImageBorder,
     StyledTextTitle,
     StyledTouchableOpacity,
     StyledView,
@@ -15,7 +16,7 @@ import {
 } from "./styles";
 import axios from "axios";
 import { UserSignUpType } from "../../Types/user";
-import { toast } from "react-toastify";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 
 export function SignUp() {
@@ -34,9 +35,9 @@ export function SignUp() {
     });
 
     async function HandleOnClick(data: UserSignUpType) {
-        const base64 = await convertToBase64(newImage);
+        // const base64 = await convertToBase64(newImage);
 
-        data.image = base64;
+        data.image = newImage;
 
         if (data.password.toString != data.confirmPassword.toString) {
             alert("A senha de confrimação está incorreta")
@@ -53,11 +54,11 @@ export function SignUp() {
                 });
 
                 if (resposta.status === 200) {
-                    toast.success(`Usuário criado com sucesso`);
+                    alert(`Usuário criado com sucesso`);
                     navigation.navigate("Login");
                 }
             } catch (err) {
-                toast.error(`Erro ao enviar os dados: ${err}`);
+                alert(`Erro ao enviar os dados: ${err}`);
             }
         }
     }
@@ -80,11 +81,11 @@ export function SignUp() {
     async function convertToBase64(uri: any) {
         const fileUri = FileSystem.cacheDirectory + 'tempImage.jpg';
         await FileSystem.copyAsync({
-          from: uri,
-          to: fileUri,
+            from: uri,
+            to: fileUri,
         });
         const base64 = await FileSystem.readAsStringAsync(fileUri, {
-          encoding: FileSystem.EncodingType.Base64,
+            encoding: FileSystem.EncodingType.Base64,
         });
         return base64;
     }
@@ -93,16 +94,19 @@ export function SignUp() {
         <StyledView>
             <StyledTextTitle>Novo Cadastro</StyledTextTitle>
 
-            <Controller
-                control={control}
-                name="image"
-                render={({ field }) => (
-                    <StyledViewImage>
-                        {newImage && <StyledImage source={{ uri: newImage }} />}
-                        <Button title="Selecione uma imagem da galeria" onPress={pickImage} />
-                    </StyledViewImage>
-                )}
-            />
+            <StyledImageBorder>
+                <Controller
+                    control={control}
+                    name="image"
+                    render={({ field }) => (
+                        <StyledViewImage>
+                            {/* {newImage && <StyledImage source={{ uri: newImage }} />}
+                            <Button title="Selecione uma imagem da galeria" onPress={pickImage} /> */}
+                            {newImage ? <StyledImage source={{ uri: newImage }} /> : <MaterialCommunityIcons name="image-plus" size={24} color="black" onPress={pickImage} />}
+                        </StyledViewImage>
+                    )}
+                />
+            </StyledImageBorder>
 
             <Controller
                 control={control}
@@ -124,7 +128,7 @@ export function SignUp() {
             <Controller
                 control={control}
                 name="email"
-                rules={{ required: "É necessário preencher o email", }}
+                rules={{ required: "É necessário preencher o email" }}
                 render={({ field, fieldState: { error } }) => (
                     <View>
                         <TextInputStyle

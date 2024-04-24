@@ -4,7 +4,6 @@ import { createContext, useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 import { IUser } from '../Types/user';
-import { ToastContainer } from 'react-toastify';
 
 
 interface AuthContextType {
@@ -13,22 +12,10 @@ interface AuthContextType {
     loading: boolean;
     login: (email: string, password: string) => Promise<void>;
     logout: () => void;
+    signed: boolean;
 }
 
-export const AuthContext = createContext<AuthContextType>({
-    authenticated: false,
-    user: {
-        IdUsuario: 0,
-        Foto: "",
-        Nome: "",
-        Email: "",
-        Senha: "",
-        Id_Status: 0
-    },
-    loading: true,
-    login: async () => { },
-    logout: () => { }
-});
+export const AuthContext = createContext({} as AuthContextType);
 
 export const AuthProvider = ({ children }: any) => {
     const [user, setUser] = useState<IUser>({
@@ -39,6 +26,7 @@ export const AuthProvider = ({ children }: any) => {
         Senha: "",
         Id_Status: 0
     });
+    const [signed, setSigned] = useState(false);
     const [loading, setLoading] = useState(true);
     const navigation = useNavigation();
 
@@ -62,9 +50,10 @@ export const AuthProvider = ({ children }: any) => {
 
             if (resposta.status === 200) {
                 setUser(resposta.data);
+                setSigned(true)
 
                 localStorage.setItem("amigochocolate:user", JSON.stringify(resposta.data));
-                navigation.navigate('Home', resposta.data);
+                navigation.navigate('Home');
             }
         } catch (err) {
             console.log("Erro ao enviar os dados: ", err);
@@ -80,6 +69,7 @@ export const AuthProvider = ({ children }: any) => {
             Senha: "",
             Id_Status: 0
         });
+        setSigned(false)
         navigation.navigate("Login");
     };
 
@@ -101,9 +91,7 @@ export const AuthProvider = ({ children }: any) => {
 
     return (
         <>
-            <ToastContainer position="top-right" />
-            
-            <AuthContext.Provider value={{ authenticated: !!user, user, loading, login, logout }}>
+            <AuthContext.Provider value={{ authenticated: !!user, user, loading, login, logout, signed }}>
                 {children}
             </AuthContext.Provider>
         </>

@@ -45,6 +45,18 @@ export const StyledViewImage = styled.View`
     justify-content: center;
     gap: 30px;
 `
+export const StyledImageBorder = styled.View`
+    margin-bottom:30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    border-radius: 50px;
+    width: 100px;
+    height: 100px;
+    background-color: gray !important;
+`
 
 export const StyledImage = styled.Image`
     border-radius: 50px;

@@ -4,9 +4,9 @@ import styled from "styled-components/native";
 export const Card = styled.TouchableOpacity`
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  gap: 10px;
+  margin-top: 15px;
 
   width: 360px;
   height: 140px;
@@ -19,8 +19,9 @@ export const Card = styled.TouchableOpacity`
   text-decoration: none;
 `
 
-export const CardTitles = styled.View`
-  color: ${({ theme }) => theme.colors.TEXT_PRIMARY};
+export const CardTitles = styled.Text`
+  color: ${({ theme }) => theme.colors.TEXT_SECUNDARY};
+  font-size: 24px;
   text-align: center;
 `
 
@@ -32,7 +33,6 @@ export const TextTitles = styled.Text`
 `
 
 export const StyledImage = styled.Image`
-  color: ${({ theme }) => theme.colors.TEXT_SECUNDARY};
   border-radius: 50px;
   width: 100px;
   height: 100px;

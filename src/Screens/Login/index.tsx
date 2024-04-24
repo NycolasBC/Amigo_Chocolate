@@ -16,7 +16,6 @@ import {
 } from "./styles";
 import { UserLoginType } from "../../Types/user";
 import { useState } from "react";
-import { toast } from "react-toastify";
 
 
 export function Login() {
@@ -36,7 +35,7 @@ export function Login() {
         try {
             await login(data.email, data.password)
         } catch (err) {
-            toast.error(`Erro ao enviar os dados: ${err}`);
+            alert(`Erro ao enviar os dados: ${err}`);
         }
     }
 
