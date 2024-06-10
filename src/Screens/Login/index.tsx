@@ -1,7 +1,7 @@
 import { Text, View } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { useNavigation } from "@react-navigation/native";
-import { routesType } from "../../Routes/routes";
+import { routesTabType, routesType } from "../../Routes/routes";
 import { MaterialCommunityIcons, FontAwesome6, Feather } from '@expo/vector-icons';
 import { useAuth } from "../../contexto/auth";
 import {

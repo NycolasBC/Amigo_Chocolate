@@ -20,3 +20,9 @@ export const StyledTouchableOpacity = styled.TouchableOpacity`
 export const StyledText = styled.Text`
     color: ${({ theme }) => theme.colors.TEXT_SECUNDARY};
 `
+
+export const StyledTextEmpty = styled.Text`
+    color: ${({ theme }) => theme.colors.TEXT_PRIMARY};
+    justify-content: center;
+    align-items: center;
+`

@@ -36,20 +36,22 @@ export const TextInputStyle = styled.TextInput`
 `
 
 export const StyledTouchableOpacity = styled.TouchableOpacity`
-    height: 50px;
-    width: 240px;
+    height: 40px;
+    width: 200px;
     align-items: center;
     justify-content: center;
     margin-top: 20px;
+    border-radius: 12px;
     background-color: ${({ theme }) => theme.colors.INFO};
 `
 
 export const StyledTouchableOpacityLogo = styled.TouchableOpacity`
-    height: 50px;
-    width: 240px;
+    height: 40px;
+    width: 200px;
     align-items: left;
     justify-content: center;
     margin-top: 20px;
+    border-radius: 12px;
     background-color: ${({ theme }) => theme.colors.BACKGROUND_SECUNDARY};
 `
 

@@ -1,12 +1,12 @@
-import { useNavigation, useRoute } from "@react-navigation/native";
-import { ScrollView, ActivityIndicator } from 'react-native';
-import { routesType } from "../../Routes/routes";
-import { StyledText, StyledTouchableOpacity, StyledView } from "./styles";
+import { ScrollView, ActivityIndicator, BackHandler, TouchableOpacity, Text } from 'react-native';
+import { StyledTextEmpty, StyledView } from "./styles";
 import { GroupCard } from "../../Components/GroupCard";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { IGrupo } from "../../Types/group";
 import { useAuth } from "../../contexto/auth";
+import { routesTabType, routesType } from '../../Routes/routes';
+import { useNavigation } from '@react-navigation/native';
 
 
 export function Home() {
@@ -15,37 +15,40 @@ export function Home() {
     const [page, setPage] = useState(1);
     const [allGroupsLoaded, setAllGroupsLoaded] = useState(false);
 
-    const { user } = useAuth();
-
     const navigation = useNavigation<routesType>();
 
+
+    const { user, logout } = useAuth();
+
     useEffect(() => {
-        try {
-            getGruposUsuario()
-        } catch (error) {
-            console.log("Erro ao enviar os dados: ", error);
-        }
-    }, [])
+        BackHandler.addEventListener("hardwareBackPress", () => {
+            return true;
+        })
+
+        // try {
+        //     getGruposUsuario()
+        // } catch (error) {
+        //     console.log("Erro ao enviar os dados: ", error);
+        // }
+    }, []);
 
     async function getGruposUsuario() {
         try {
-            const apiUrl = `https://localhost:7278/api/GrupoUsuario/buscarporid/${user.idUsuario}`;
+            const apiUrl = `https://localhost:7278/grupousuario/${user.idUsuario}`;
             const resposta = await axios.get(apiUrl);
 
             setGrupos(resposta.data)
         } catch (err) {
             alert(`Erro ao enviar os dados: ${err}`);
         }
-    }
-
-
+    };
 
     async function loadMoreGroups() {
         if (loading || allGroupsLoaded) return;
 
         try {
             setLoading(true);
-            const nextPageUrl = `https://localhost:7278/api/GrupoUsuario/buscarporid/${user.idUsuario}?page=${page + 1}`;
+            const nextPageUrl = `https://localhost:7278/grupousuario/${user.idUsuario}?page=${page + 1}`;
             const response = await axios.get(nextPageUrl);
             const newGroups = response.data;
 
@@ -60,7 +63,7 @@ export function Home() {
         } finally {
             setLoading(false);
         }
-    }
+    };
 
     function isCloseToBottom({ layoutMeasurement, contentOffset, contentSize }: any) {
         const paddingToBottom = 3;
@@ -69,19 +72,30 @@ export function Home() {
 
     return (
         <StyledView>
-            <ScrollView
-                onScroll={({ nativeEvent }) => {
-                    if (isCloseToBottom(nativeEvent) && !loading && !allGroupsLoaded) {
-                        loadMoreGroups();
-                    }
-                }}
-                scrollEventThrottle={400}
-            >
-                {grupos.map((grupo) => (
-                    <GroupCard key={grupo.idGrupo} data={grupo} />
-                ))}
-                {loading && <ActivityIndicator size="large" />}
-            </ScrollView>
+            <TouchableOpacity onPress={() => logout()}>
+                <Text style={{ color: "white" }}>sAIR</Text>
+            </TouchableOpacity>
+            {grupos.length === 0 ? (
+                <StyledTextEmpty>Nenhum grupo disponível no momento.</StyledTextEmpty>
+            ) : (
+                <ScrollView
+                    onScroll={({ nativeEvent }) => {
+                        if (isCloseToBottom(nativeEvent) && !loading && !allGroupsLoaded) {
+                            loadMoreGroups();
+                        }
+                    }}
+                    scrollEventThrottle={10}
+                >
+
+                    {grupos.map((grupo) => (
+                        <GroupCard
+                            key={grupo.idGrupo}
+                            data={grupo}
+                        />
+                    ))}
+                    {loading && <ActivityIndicator size="large" />}
+                </ScrollView>
+            )}
         </StyledView>
     )
 }

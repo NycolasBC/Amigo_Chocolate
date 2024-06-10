@@ -55,7 +55,7 @@ export function RegistrationGroup() {
         try {
 
             const resposta = await axios.post(
-                `https://localhost:7278/api/Grupo/adicionar`, {
+                `https://localhost:7278/grupo`, {
                 Id: user.idUsuario,
                 NovoGrupo: {
                     Imagem: data.image,
@@ -68,7 +68,7 @@ export function RegistrationGroup() {
                 }
             });
 
-            if (resposta.status === 200) {
+            if (resposta.status === 201) {
                 alert(`Grupo criado com sucesso`);
                 navigation.navigate("Home");
             }

@@ -1,10 +1,9 @@
-// auth.tsx
-
-import { createContext, useState, useEffect, useContext } from 'react';
+import React, { createContext, useState, useEffect, useContext } from 'react';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { IUser } from '../Types/user';
-
+import { routesTabType, routesType } from '../Routes/routes';
 
 interface AuthContextType {
     authenticated: boolean;
@@ -17,7 +16,7 @@ interface AuthContextType {
 
 export const AuthContext = createContext({} as AuthContextType);
 
-export const AuthProvider = ({ children }: any) => {
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<IUser>({
         IdUsuario: 0,
         Foto: "",
@@ -28,39 +27,54 @@ export const AuthProvider = ({ children }: any) => {
     });
     const [signed, setSigned] = useState(false);
     const [loading, setLoading] = useState(true);
-    const navigation = useNavigation();
+    // const navigation = useNavigation<routesTabType>();
+    const navigation = useNavigation<routesType>();
 
     useEffect(() => {
-        const recoveredUser = localStorage.getItem("amigochocolate:user");
+        const loadUserFromStorage = async () => {
+            const recoveredUser = await AsyncStorage.getItem("amigochocolate:user");
 
-        if (recoveredUser) {
-            setUser(JSON.parse(recoveredUser));
-        }
+            if (recoveredUser) {
+                setUser(JSON.parse(recoveredUser));
+                setSigned(true);
+            }
 
-        setLoading(false);
+            setLoading(false);
+        };
+
+        loadUserFromStorage();
     }, []);
 
     const login = async (email: string, password: string) => {
-        try {
-            const resposta = await axios.post(
-                'https://localhost:7278/api/Login/autenticar', {
-                Email: email,
-                Senha: password
-            });
-
-            if (resposta.status === 200) {
-                setUser(resposta.data);
-                setSigned(true)
-
-                localStorage.setItem("amigochocolate:user", JSON.stringify(resposta.data));
-                navigation.navigate('Home');
-            }
-        } catch (err) {
-            console.log("Erro ao enviar os dados: ", err);
+        const resposta: IUser = {
+            IdUsuario: 0,
+            Foto: "",
+            Nome: "",
+            Email: "",
+            Senha: "",
+            Id_Status: 0
         }
+        // try {
+        //     const resposta = await axios.post(
+        //         'https://localhost:7278/login', {
+        //         Email: email,
+        //         Senha: password
+        //     });
+
+        //     if (resposta.status === 200) {
+        setUser(resposta);
+        setSigned(true);
+
+        // await AsyncStorage.setItem("amigochocolate:user", JSON.stringify(resposta.data));
+        await AsyncStorage.setItem("amigochocolate:user", JSON.stringify(resposta));
+        // navigation.navigate('Home');
+        //     }
+        // } catch (err) {
+        //     console.log("Erro ao enviar os dados: ", err);
+        // }
     };
 
-    const logout = () => {
+    const logout = async () => {
         setUser({
             IdUsuario: 0,
             Foto: "",
@@ -69,14 +83,16 @@ export const AuthProvider = ({ children }: any) => {
             Senha: "",
             Id_Status: 0
         });
-        setSigned(false)
+        setSigned(false);
+
+        await AsyncStorage.removeItem("amigochocolate:user");
         navigation.navigate("Login");
     };
 
     useEffect(() => {
-        const clearStorage = () => {
+        const clearStorage = async () => {
             try {
-                logout();
+                await logout();
             } catch (error) {
                 console.log(error);
             }
@@ -90,11 +106,9 @@ export const AuthProvider = ({ children }: any) => {
     }, []);
 
     return (
-        <>
-            <AuthContext.Provider value={{ authenticated: !!user, user, loading, login, logout, signed }}>
-                {children}
-            </AuthContext.Provider>
-        </>
+        <AuthContext.Provider value={{ authenticated: !!user, user, loading, login, logout, signed }}>
+            {children}
+        </AuthContext.Provider>
     );
 };
 

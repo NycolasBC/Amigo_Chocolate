@@ -40,12 +40,12 @@ export function SignUp() {
         data.image = newImage;
 
         if (data.password.toString != data.confirmPassword.toString) {
-            alert("A senha de confrimação está incorreta")
+            alert("A senha de confirmação está incorreta")
         }
         else {
             try {
                 const resposta = await axios.post(
-                    'https://localhost:7278/api/Usuario/adicionar', {
+                    'https://localhost:7278/usuario', {
                     Foto: data.image,
                     Nome: data.name,
                     Email: data.email,
@@ -53,7 +53,7 @@ export function SignUp() {
                     Id_Status: 1
                 });
 
-                if (resposta.status === 200) {
+                if (resposta.status === 201) {
                     alert(`Usuário criado com sucesso`);
                     navigation.navigate("Login");
                 }

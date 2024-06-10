@@ -8,9 +8,10 @@ import { SignUp } from '../Screens/SignUp';
 import { RegistrationGroup } from '../Screens/RegistrationGroup';
 import { EditGroup } from '../Screens/EditGroup/EditGroup';
 import { useAuth, AuthProvider } from '../contexto/auth';
-import { RoutesNavigationType } from '../Types/routes';
+import { BottomTabParamList, RoutesNavigationType } from '../Types/routes';
 import { HomeButton } from '../Components/HomeButton';
 import { Feather, AntDesign } from '@expo/vector-icons';
+import { Splash } from '../Screens/Splash';
 
 
 const routes = createNativeStackNavigator();
@@ -18,6 +19,7 @@ const tab = createBottomTabNavigator();
 
 
 export type routesType = NativeStackNavigationProp<RoutesNavigationType>
+export type routesTabType = NativeStackNavigationProp<BottomTabParamList>
 
 function TabNavigator() {
     return (
@@ -64,7 +66,12 @@ function TabNavigator() {
 
 function AuthenticatedRoutes() {
     return (
-        <routes.Navigator initialRouteName='Tabs' screenOptions={{ headerShown: false }}>
+        <routes.Navigator screenOptions={{ headerShown: false }}>
+            <routes.Screen
+                name="Splash"
+                component={Splash}
+                options={{ headerShown: false }}
+            />
             <routes.Screen
                 name="Tabs"
                 component={TabNavigator}
