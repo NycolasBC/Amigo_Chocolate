@@ -13,4 +13,5 @@ export type RoutesNavigationType = {
 export type BottomTabParamList = {
     Home: undefined;
     RegistrationGroup: undefined;
+    Invite: undefined;
 };

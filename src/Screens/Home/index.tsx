@@ -5,8 +5,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { IGrupo } from "../../Types/group";
 import { useAuth } from "../../contexto/auth";
-import { routesTabType, routesType } from '../../Routes/routes';
-import { useNavigation } from '@react-navigation/native';
+import { routesType } from '../../Routes/routes';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 
 
 export function Home() {
@@ -19,6 +19,7 @@ export function Home() {
 
 
     const { user, logout } = useAuth();
+    const isFocused = useIsFocused();
 
     useEffect(() => {
         BackHandler.addEventListener("hardwareBackPress", () => {
@@ -30,7 +31,7 @@ export function Home() {
         // } catch (error) {
         //     console.log("Erro ao enviar os dados: ", error);
         // }
-    }, []);
+    }, [isFocused]);
 
     async function getGruposUsuario() {
         try {
