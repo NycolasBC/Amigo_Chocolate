@@ -8,6 +8,7 @@ export interface IConviteRegistration {
 }
 
 export interface IConvite {
+    idConvite: number;
     idGrupo: number;
     nomeGrupo: string;
     nomeUsuario: string;

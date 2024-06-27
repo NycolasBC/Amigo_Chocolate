@@ -17,7 +17,7 @@ export function GroupCard({ data, ...props }: GrupCardProps) {
     const navigation = useNavigation<routesType>();
     return (
         <Card {...props} onPress={() => { navigation.navigate("EditGroup", { params: data }) }}>
-            <StyledImage source={data.imagem ? data.imagem : ImageDefault} />
+            <StyledImage source={{ uri: data.imagem ? data.imagem : ImageDefault }} />
             <CardTitles>
                 {data.nome}
             </CardTitles>
