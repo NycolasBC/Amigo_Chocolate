@@ -32,6 +32,7 @@ export function Login() {
     });
 
     async function HandleOnClick(data: UserLoginType) {
+        console.log("Login: " + data)
         try {
             await login(data.email, data.password)
         } catch (err) {

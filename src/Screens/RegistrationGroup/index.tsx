@@ -52,6 +52,8 @@ export function RegistrationGroup() {
 
         const dataFormatada: string = datas.toISOString();
         console.log("Data formatada: ", dataFormatada)
+        console.log("Data: ", data.name)
+        console.log("IdUsuario: ", user.idUsuario)
         try {
 
             const resposta = await axios.post(
@@ -61,7 +63,7 @@ export function RegistrationGroup() {
                     Imagem: data.image,
                     Nome: data.name,
                     QtdUsuario: data.qtdUsers,
-                    Valor: data.amount,
+                    Valor: Number(data.amount),
                     DataRevelacao: dataFormatada,
                     Descricao: data.description,
                     Id_Status: 1
@@ -69,7 +71,6 @@ export function RegistrationGroup() {
             });
 
             if (resposta.status === 201) {
-                alert(`Grupo criado com sucesso`);
                 navigation.navigate("Home");
             }
         } catch (err) {

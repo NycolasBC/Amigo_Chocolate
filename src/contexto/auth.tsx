@@ -18,12 +18,12 @@ export const AuthContext = createContext({} as AuthContextType);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<IUser>({
-        IdUsuario: 0,
-        Foto: "",
-        Nome: "",
-        Email: "",
-        Senha: "",
-        Id_Status: 0
+        idUsuario: 0,
+        foto: "",
+        nome: "",
+        email: "",
+        senha: "",
+        id_Status: 0
     });
     const [signed, setSigned] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -46,42 +46,34 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }, []);
 
     const login = async (email: string, password: string) => {
-        const resposta: IUser = {
-            IdUsuario: 0,
-            Foto: "",
-            Nome: "",
-            Email: "",
-            Senha: "",
-            Id_Status: 0
+        console.log("login email: ", email);
+        console.log("login senha: ", password);
+        try {
+            const resposta = await axios.post(
+                'https://localhost:7278/login', {
+                Email: email,
+                Senha: password
+            });
+
+            if (resposta.status === 200) {
+                setUser(resposta.data);
+                setSigned(true);
+
+                await AsyncStorage.setItem("amigochocolate:user", JSON.stringify(resposta.data));
+            }
+        } catch (err) {
+            console.log("Erro ao enviar os dados: ", err);
         }
-        // try {
-        //     const resposta = await axios.post(
-        //         'https://localhost:7278/login', {
-        //         Email: email,
-        //         Senha: password
-        //     });
-
-        //     if (resposta.status === 200) {
-        setUser(resposta);
-        setSigned(true);
-
-        // await AsyncStorage.setItem("amigochocolate:user", JSON.stringify(resposta.data));
-        await AsyncStorage.setItem("amigochocolate:user", JSON.stringify(resposta));
-        // navigation.navigate('Home');
-        //     }
-        // } catch (err) {
-        //     console.log("Erro ao enviar os dados: ", err);
-        // }
     };
 
     const logout = async () => {
         setUser({
-            IdUsuario: 0,
-            Foto: "",
-            Nome: "",
-            Email: "",
-            Senha: "",
-            Id_Status: 0
+            idUsuario: 0,
+            foto: "",
+            nome: "",
+            email: "",
+            senha: "",
+            id_Status: 0
         });
         setSigned(false);
 
